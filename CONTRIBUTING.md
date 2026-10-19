@@ -81,6 +81,44 @@ TricklePay is a real-time, continuous token payment and streaming protocol built
 
 ---
 
+## Local pre-commit checks
+
+The optional Git hook prevents a commit that fails TypeScript typechecking or
+ESLint on **staged JavaScript/TypeScript files**. Install it once per clone after
+installing dependencies:
+
+```bash
+npm ci
+npm run hooks:install
+```
+
+The installer writes `.git/hooks/pre-commit` (or the equivalent Git worktree
+hooks directory). It does not replace an existing hook or change a configured
+`core.hooksPath`. In those cases, integrate
+`node scripts/pre-commit.cjs` into your existing pre-commit hook.
+
+For commits containing staged `.js`, `.jsx`, `.ts`, `.tsx`, `.mjs`,
+`.mts`, `.cjs` or `.cts` files, the hook runs a **project-wide**
+`tsc --noEmit` and ESLint against only the staged source paths. It skips
+checks for documentation-only commits and stops a commit if either check
+fails. The tools inspect the current working-tree contents, so stage your
+final edits before committing. Git's normal `npm run lint`,
+`npm run typecheck`, `npm test`, and `npm run build` checks are still
+required before opening a pull request.
+
+To bypass knowingly for one commit:
+
+```bash
+SKIP_TRICKLEPAY_HOOKS=1 git commit -m "reason for bypass"
+```
+
+On Windows PowerShell, set `$env:SKIP_TRICKLEPAY_HOOKS='1'` for the
+commit and remove it afterward with
+`Remove-Item Env:SKIP_TRICKLEPAY_HOOKS`. This bypass affects only the local
+hook, not CI.
+
+---
+
 ## 📁 Project Structure
 
 ```text
