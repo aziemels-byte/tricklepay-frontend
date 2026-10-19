@@ -15,7 +15,7 @@ if (actualRoot !== root) {
 }
 let customHooks = "";
 try {
-  customHooks = git(["config", "--local", "--get", "core.hooksPath"]);
+  customHooks = git(["config", "--get", "core.hooksPath"]);
 } catch {
   // The local repository uses Git's default .git/hooks directory.
 }
